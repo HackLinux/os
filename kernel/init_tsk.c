@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:init_tsk.o>
+ * @brief kernelのinit後、起動するタスク(デーモン)
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "defines.h"
 #include "kernel.h"
@@ -13,7 +20,15 @@
 extern void uart_handler(void);
 
 
-/*! initタスク */
+/*!
+ * @brief initタスク
+ * @param[in] argc:はargc
+ *	@arg 特に関係なし
+ * @param[out] *argv[]:は*argv[]
+ *	@arg 特に県警なし
+ * @return 終値
+ *	@retval 0:正常終了
+ */
 int start_threads(int argc, char *argv[])
 {
   KERNEL_OUTMSG("init task started.\n");

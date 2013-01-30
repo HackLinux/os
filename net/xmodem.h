@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief xmodem転送プロトコル(送信)インターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _XMODEM_H_INCLUDED_
 #define _XMODEM_H_INCLUDED_
 

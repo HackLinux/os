@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief タスク管理インターフェース
+ * @attention gcc4.5.x以外は試していない
+ * @note μITRON4.0仕様参考
+ */
+
+
 #ifndef _TASK_MANAGE_H_INCLUDED_
 #define _TASK_MANAGE_H_INCLUDED_
 

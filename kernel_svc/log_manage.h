@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief ログ管理インターフェース
+ * @attention gcc4.5.x以外は試していない
+ * @note ロギング情報はまとめた方がよい
+ */
+
+
 #ifndef _LOG_MANAGE_H_INCLUDED_
 #define _LOG_MANAGE_H_INCLUDED_
 

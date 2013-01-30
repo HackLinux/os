@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief 簡易C標準ライブラリインターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _LIB_H_INCLUDED_
 #define _LIB_H_INCLUDED_
 

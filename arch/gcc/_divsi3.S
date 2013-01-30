@@ -1,3 +1,10 @@
+/*!
+ * @file コンパイラ依存部(arm-none-eabi-gcc)
+ * @brief 乗算、除算関連
+ * @attention gcc4.5.x以外は試していない
+ * @note info参照
+ */
+
 
 .macro ARM_DIV_BODY dividend, divisor, result, curbit
 

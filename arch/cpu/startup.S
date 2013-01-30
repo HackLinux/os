@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット依存部(ARM-Cortex-A8)<モジュール:startup.o>
+ * @brief スタートアップ
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 #include "cpu_cntrl.h"
 
 #define VECTOR_TABLE   0x4020FFC4		/*! lowvectorの先頭アドレス */

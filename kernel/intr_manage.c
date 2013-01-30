@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部<モジュール:intr_manage.o>
+ * @brief 割込み管理機能
+ * @attention gcc4.5.x以外は試していない
+ * @note μITRON4.0仕様参考
+ */
+
+
 /* os/kernel/ */
 #include "intr_manage.h"
 #include "kernel.h"
@@ -12,15 +20,16 @@ IR_HANDL g_exter_handlers[EXTERNAL_INTERRUPT_NUM] = {0};
 
 
 /*!
- * システムコールの処理(def_inh():割込みハンドラの定義)
- * -属性はない．また登録できる割込みハンドラはシリアル割込みハンドラのみ
- * -ただし，initタスクだけはシステムコールハンドラ及びソフトウェアエラー(例外)，
- * -タイマ割込みハンドラ登録ができる．そのためE_ILUSEエラーを追加した
- * type : ソフトウェア割込みベクタ番号
- * handler : 登録するハンドラポインタ
- * (返却値)E_ILUSE : 不正使用
- * (返却値)E_PAR : パラメータエラー
- * (返却値)E_OK : 登録完了
+ * @brief システムコールの処理(def_inh():割込みハンドラの定義)
+ * @param[in] type:ベクタ番号
+ *	@arg 特になし
+ * @param[in] handler:登録するハンドラ
+ *	@arg 特になし
+ * @return エラーコード
+ *	@retval E_PAR:パラメータエラー,E_ILUSE:不正使用,E_OK:登録完了
+ * @note -属性はない．また登録できる割込みハンドラはシリアル割込みハンドラのみ
+ * 				-ただし，initタスクだけはシステムコールハンドラ及びソフトウェアエラー(例外)，
+ * 				-タイマ割込みハンドラ登録ができる．そのためE_ILUSEエラーを追加した
  */
 ER def_inh_isr(INTRPT_TYPE type, IR_HANDL handler)
 {

@@ -1,8 +1,14 @@
+/*!
+ * @file ターゲット非依存部<モジュール:log_manage.o>
+ * @brief 制御コード定義(JIS X 0211~C0集合)
+ * @attention gcc4.5.x以外は試していない
+ * @note JIS X 0211参照
+ */
+
+
 #ifndef _JIS_CTRL_CRD_H_INCLUDED_
 #define _JIS_CTRL_CRD_H_INCLUDED_
 
-
-/* 制御コード定義(JIS X 0211~C0集合) */
 
 #define JIS_X_0211_NUL	0x00	/*! NULL */
 #define JIS_X_0211_SOH	0x01	/*! ヘッダ開始(xmodemは，送信開始) */

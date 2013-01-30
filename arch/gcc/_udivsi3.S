@@ -1,3 +1,11 @@
+/*!
+ * @file コンパイラ依存部(arm-none-eabi-gcc)
+ * @brief 乗算、除算関連
+ * @attention gcc4.5.x以外は試していない
+ * @note info参照
+ */
+
+
 /* # 1 "libgcc1.S" */
 @ libgcc1 routines for ARM cpu.
 @ Division routines, written by Richard Earnshaw, (rearnsha@armltd.co.uk)

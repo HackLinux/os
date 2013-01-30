@@ -1,4 +1,10 @@
-/* IRQ周り */
+/*!
+ * @file ターゲット依存部(ARM-Cortex-A8)
+ * @brief IRQ周り
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
 
 #ifndef _INTR_H_INCLUDED_
 #define _INTR_H_INCLUDED_

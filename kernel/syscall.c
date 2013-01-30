@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:syscall.o>
+ * @brief システムコール管理
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "defines.h"
 #include "kernel.h"

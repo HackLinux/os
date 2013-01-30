@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部<モジュール:command.o>
+ * @brief OSを操作する基本コマンド
+ * @attention gcc4.5.x以外は試していない
+ * @note 実装が汚いので検討する
+ */
+
+
 /* os/kernel */
 #include "command.h"
 #include "kernel.h"
@@ -27,8 +35,11 @@ extern UINT32 _logbuffer_start;
 
 
 /*!
- * echoコマンド
- * buf[] : 標準出力するバッファ
+ * @brief echoコマンド
+ * @param[in] なし
+ * @param[out] buf[]:標準出力するバッファ
+ *	@arg NULL以外
+ * @return なし
  */
 void echo_command(char buf[])
 {
@@ -38,9 +49,11 @@ void echo_command(char buf[])
 
 
 /*!
- * helpコマンド
- * -コマンドのhelp
- * *buf : 標準出力するバッファポインタ
+ * @brief helpコマンド(コマンドのhelpを出力する)
+ * @param[in] なし
+ * @param[out] *buf:標準出力するバッファ
+ *	@arg NULL以外
+ * @return なし
  */
 void help_command(char *buf)
 {
@@ -103,8 +116,10 @@ void help_command(char *buf)
 
 
 /*!
- * sendlogコマンド
- * -logの送信
+ * @brief sendlogコマンド(logの送信)
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
  */
 void sendlog_command(void)
 {
@@ -125,9 +140,11 @@ void sendlog_command(void)
 #ifdef TSK_LIBRARY
 
 /*!
- * runコマンド
- * -tsk_setの起動
- * *buf : 起動するタスクセット名が格納されたバッファ
+ * @brief runコマンド(tsk_setの起動)
+ * @param[in] なし
+ * @param[out] *buf:標準出力するバッファ
+ *	@arg NULL以外
+ * @return なし
  */
 void run_command(char *buf)
 {
@@ -146,7 +163,12 @@ void run_command(char *buf)
 }
 
 
-/*! tsk_set1の起動 */
+/*!
+ * @brief tsk_set1の起動
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 static void tsk_set1_command(void)
 {
 	SYSCALL_PARAMCB tsk1_param;
@@ -163,7 +185,12 @@ static void tsk_set1_command(void)
 }
 
 
-/*! tsk_set2の起動 */
+/*!
+ * @brief tsk_set2の起動
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 static void tsk_set2_command(void)
 {
 	SYSCALL_PARAMCB tsk1_param;
@@ -180,7 +207,12 @@ static void tsk_set2_command(void)
 }
 
 
-/*! tsk_set3の起動 */
+/*!
+ * @brief tsk_set3の起動
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 static void tsk_set3_command(void)
 {
 	SYSCALL_PARAMCB tsk1_param;

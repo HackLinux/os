@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief OSを操作する基本コマンドインターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _COMMAND_H_INCLUDED_
 #define _COMMAND_H_INCLUDED_
 

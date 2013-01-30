@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部<モジュール:tsk_sync.o>
+ * @brief タスク付属同期
+ * @attention gcc4.5.x以外は試していない
+ * @note μITRON4.0仕様参考
+ */
+
+
 /* os/kernel */
 #include "task_sync.h"
 #include "kernel.h"

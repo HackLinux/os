@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット依存部
+ * @brief タイマドライバインターフェース
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 #ifndef _TIMER_DRIVER_H_INCLUDED_
 #define _TIMER_DRIVER_H_INCLUDED_
 

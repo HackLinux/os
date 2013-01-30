@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:ready.o>
+ * @brief レディー状態管理
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "ready.h"
 #include "kernel.h"

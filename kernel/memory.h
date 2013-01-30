@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief heap管理(動的メモリ)インターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _MEMORY_H_INCLUDED_
 #define _MEMORY_H_INCLUDED_
 

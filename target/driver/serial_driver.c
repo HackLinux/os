@@ -1,3 +1,12 @@
+/*!
+ * @file ターゲット依存部<モジュール:serial_driver.o>
+ * @brief UARTドライバ
+ * @attention gcc4.5.x以外は試していない,
+ *            レジスタパックに構造体は使用しない(バイエンディアンCPUへの移植性低下のため)
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 /* os/target/driver */
 #include "serial_driver.h"
 /* os/kernel */

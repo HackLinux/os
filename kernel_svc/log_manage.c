@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部<モジュール:log_manage.o>
+ * @brief ロギング
+ * @attention gcc4.5.x以外は試していない
+ * @note 時間の対応を行う
+ */
+
+
 /* os/kernel_svc */
 #include "log_manage.h"
 /* os/kernel */

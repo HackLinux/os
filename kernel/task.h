@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief タスクメカニズム、タスク周り操作マクロ定義
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _TASK_H_INCLUDED_
 #define _TASK_H_INCLUDED_
 
@@ -40,8 +47,9 @@
 
 
 /*!
-* タスクのスタート・アップ(thread_init())に渡すパラメータ.実行時に内容が変わらないところ
-*/ 
+ * @brief タスクの初期情報管理
+ * @note タスクのスタート・アップに渡すパラメータ.実行時に内容が変わらないところ
+ */
 typedef struct _task_init_infomation {
 	int tskid;														/*! タスクID */
   TSK_FUNC func; 												/*! タスクのメイン関数 */
@@ -52,7 +60,9 @@ typedef struct _task_init_infomation {
 } TSK_INITCB;
 
 
-/*! タスクの待ち情報管理構造体 */
+/*!
+ * @brief タスクの待ち情報管理
+ */
 typedef struct _task_wait_infomation {
 	struct _task_struct *wait_next;				/*! 待ちオブジェクトへの次ポインタ */
 	struct _task_struct *wait_prev;				/*! 待ちオブジェクトへの前ポインタ */
@@ -61,21 +71,28 @@ typedef struct _task_wait_infomation {
 } TSK_WAIT_INFOCB;
 
 
-/*! タスクのカーネルオブジェクト取得情報(休止状態または未登録状態に遷移する時に使用する) */
+/*!
+ * @brief タスクのカーネルオブジェクト取得情報
+ * @note 休止状態または未登録状態に遷移する時に使用する
+ */
 typedef struct _task_get_infomation {
 	int flags; 														/*! 取得フラグ */
 	GET_OBJP gobjp; 											/*! 取得しているカーネルオブジェクトのポインタ */
 } TSK_GET_INFOCB;
 
 
-/*! タスクコンテキスト */
+/*!
+ * @brief タスクコンテキスト
+ */
 typedef struct _task_interrupt_infomation {
 	INTR_TYPE type;												/*! 割込みの種類 */
   UINT32 sp; 														/*! タスクスタックへのポインタ */
 } TSK_INTR_INFOCB;
 
 
-/*! システムコール用バッファ */
+/*!
+ * @brief システムコール管理
+ */
 typedef struct _task_systemcall_infomation {
 	SYSCALL_TYPE flag; 										/*! システムコールかサービスコールかを判別 */
   ISR_TYPE type; 												/*! システムコールのID */
@@ -84,14 +101,20 @@ typedef struct _task_systemcall_infomation {
 } TSK_SYSCALL_INFOCB;
 
 
-/*! スケジューラによって依存する情報 */
+/*!
+ * @brief スケジューラによって依存する情報
+ */
 typedef struct _scheduler_depend_infomation {
 	union {
-		/*! タイムスライス型スケジューラに依存する情報 */
+		/*!
+		 * @brief タイムスライス型スケジューラに依存する情報
+		 */
 		struct {
 			int tm_slice;											/*! タスクのタイムスライス(タイムスライスが絡まないスケジューリングの時は-1となる) */
 		} slice_schdul;
-		/* リアルタイム型スケジューラに依存する情報 */
+		/*!
+		 * @brief リアルタイム型スケジューラに依存する情報
+		 */
 		struct {
 			int rel_exetim;										/*! 実行時間(RM専用のメンバで簡単化のため相対デッドライン時間とする) */
 			int rate;													/*! 周期 */
@@ -103,14 +126,19 @@ typedef struct _scheduler_depend_infomation {
 } SCHDUL_DEP_INFOCB;
 
 
-/*! レディーによって依存する内容(静的優先度はキュー構造のレディー,動的優先度は2分木と整列リストのレディー) */
+/*!
+ * @brief レディーによって依存する内容
+ */
 typedef struct _ready_depend_infomation {
 	union {
-		/*! キュー構造のレディー */
+		/*!
+		 * @brief キュー構造のレディー
+		 */
 		struct {
 			struct _task_struct *ready_next; /*! レディーの次ポインタ */
   		struct _task_struct *ready_prev; /*! レディーの前ポインタ */
   	} que_ready;
+		/* パディング調整 */
 		struct {
 			int dummy;
 		} dum;
@@ -119,8 +147,8 @@ typedef struct _ready_depend_infomation {
 
 
 /*!
-* タスクコントロールブロック(TCB)
-*/
+ * @brief タスクコントロールブロック
+ */
 typedef struct _task_struct {
 	struct _task_struct *free_next; 	/*! free listの次ポインタ */
   struct _task_struct *free_prev; 	/*! free listの前ポインタ */
@@ -138,7 +166,9 @@ typedef struct _task_struct {
 } TCB;
 
 
-/*! タスク情報 */
+/*!
+ * @brief タスク情報(タスクメカニズム管理)
+ */
 typedef struct _task_infomation {
 	TCB **id_table; 									/*! task ID変換テーブルへのheadポインタ(可変長配列として使用) */
 	TCB *freehead; 										/*! taskリンクドfreeリストのキュー(freeheadポインタを記録) */

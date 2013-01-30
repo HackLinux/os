@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット依存部(ARM-Cortex-A8)<モジュール:main.o>
+ * @brief kernelのmainとUARTハンドラ
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 /* os/arch/cpu */
 #include "arch/cpu/intr.h"
 /* os/kernel */
@@ -29,7 +37,16 @@ ER_ID sample_tsk8_id;
 #endif
 
 
-/* irqハンドラ */
+/*!
+ * @brief IRQハンドラ
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ * @note UART関連のレジスタであるIIRレジスタから割込みタイプの取得
+ *       (IIRレジスタは下位5ビットで割込みタイプを保持している)
+ *       シリアル受信割込み : 0x2
+ *       タイムアウト割込み(シリアル受信割込みを有効化すると同時に有効化される) : 0x6
+ */
 void uart_handler(void)
 {
   unsigned char c;
@@ -37,12 +54,6 @@ void uart_handler(void)
   static int len;
   int it_type;
 
-  /*
-   * UART関連のレジスタであるIIRレジスタから割込みタイプの取得
-   * (IIRレジスタは下位5ビットで割込みタイプを保持している)
-   * シリアル受信割込み : 0x2
-   * タイムアウト割込み(シリアル受信割込みを有効化すると同時に有効化される) : 0x6
-   */
 	it_type = (REG8_READ(UIIR) & 0x3E) >> 1;
 
   if (it_type == 2 || it_type == 6) {
@@ -86,8 +97,15 @@ void uart_handler(void)
 }
 
 
-/*! OSメイン関数 */
-/*  CPSRの外部割込み無効モードとして起動 */
+/*!
+ * @brief OSメイン関数
+ * @attention CPSRの外部割込み無効モードとして起動
+ * @param[in] なし
+ * @param[out] なし
+ * @return 終了値
+ * 	@retval 0:OS実効終了
+ * @note 正常retvalは返却されない
+ */
 int main(void)
 {
   

@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief スケジューリングポリシーのインターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _SCHEDULER_H_INCLUDED_
 #define _SCHEDULER_H_INCLUDED_
 
@@ -8,27 +15,40 @@
 #include "ready.h"
 
 
-/*! スケジューラコントロールブロック */
-/*
-* ～スケジューラが個別に持つ情報～
-*/
+/*!
+ * @brief スケジューラコントロールブロック
+ * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+ * @note スケジューラが個別に持つ情報
+ */
 typedef struct {
 	union {
-		/*! FCFSスケジューリングエリア  */
+		/*!
+		 * @brief FCFSスケジューリングエリア
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
 			void (*rte)(void); 				/*! スケジューラへのポインタ */
 		} fcfs_schdul;
-		/*! 優先度スケジューリングエリア */
+		/*!
+		 * @brief 優先度スケジューリングエリア
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
 			void (*rte)(void); 				/*! スケジューラへのポインタ */
 		} ps_schdul;
-		/*! Rate Monotonicエリア */
+		/*!
+		 * @brief Rate Monotonicエリア
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
 			int unroll_rate;						/*! 周期最小公倍数(create()されたタスクまで) */
 			int unroll_exetim;					/*! 周期に沿った最大実行時間(create()されたタスクまで).簡単化のため相対デッドライン時間とする */
 			void (*rte)(void);					/*! スケジューラへのポインタ */
 		} rms_schdul;
-		/*! Deadline Monotonicエリア */
+		/*!
+		 * @brief Deadline Monotonicエリア
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
 			int unroll_dead;						/*! デッドライン最小公倍数(create()されたタスクまで) */
 			int unroll_exetim;					/*! 周期に沿った最大実行時間(create()されたタスクまで).簡単化のため相対デッドライン時間とする */
@@ -38,8 +58,10 @@ typedef struct {
 } SCHDULCB;
 
 
-/*! スケジューリング情報 */
-/* ～スケジューラで共通で持つ情報～ */
+/*!
+ * @brief スケジューリング情報
+ * @note スケジューラで共通で持つ情報
+ */
 typedef struct scheduler_infomation {
 	SCHDUL_TYPE type;								/*! スケジューリングタイプ */
 	SCHDULCB *entry; 								/*! スケジューラコントロールブロックポインタ */

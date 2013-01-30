@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief 本OSを使用する型、エラーコードを定義
+ * @attention gcc4.5.x以外は試していない
+ * @note Cのデータ型について、移植性を上げるには別途検討(C99に対応すると良い)する
+ */
+
+
 #ifndef _DEFINES_H_INCLUDED_
 #define _DEFINES_H_INCLUDED_
 
@@ -174,8 +182,10 @@ typedef enum {
   MBX_TA_TPRI,										/*! 待ちタスクを優先度順で戻す */
 } MBX_WATR;
 
-
-/*! メッセージヘッダの定義 */
+/*!
+ * @brief メッセージヘッダ
+ * @note μITRON4.0参照
+ */
 typedef struct _type_massage {
   struct _type_massage *next;			/*! メッセージ次ポインタ */
   struct _type_massage *prev;			/*! メッセージ前ポインタ */

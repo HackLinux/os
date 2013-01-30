@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief kernelのinit、カーネルコア、カーネルコアメカニズムインターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _KERNEL_H_INCLUDED_
 #define _KERNEL_H_INCLUDED_
 
@@ -16,7 +23,9 @@ extern "C" {
 #include "task.h"
 
 
-/*! ディスパッチ情報 */
+/*!
+ * @brief ディスパッチ情報
+ */
 typedef struct _dispatcher_infomation {
 	char flag; 												/*! ディスパッチ状態フラグ */
 	void (*func)(UINT32 *context);		/*! ディスパッチルーチン(1つだけしかないからtypedefしない) */

@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:scheduler.o>
+ * @brief スケジューリング
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "scheduler.h"
 #include "kernel.h"

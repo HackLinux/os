@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:kernel.o>
+ * @brief kernelのinit、カーネルコア、カーネルコアメカニズム
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "intr_manage.h"
 #include "kernel.h"
@@ -94,17 +101,22 @@ static void (*sg_isr_ihandlers[ISR_INUM])(SYSCALL_PARAMCB *p) =
 
 
 /*!
-* タスク生成パラメータチェック関数
-* func : タスクのメイン関数
-* priority : タスクの優先度
-* stacksize : ユーザスタック(タスクのスタック)のサイズ
-* rate : 周期
-* rel_exetim : 実行時間(仮想)
-* deadtim : デッドライン時刻
-* floatim : 余裕時間
-* (返却値)E_PAR : システムコールの引数不正
-* (返却値)E_OK : 生成可能
-*/
+ * @brief タスク生成パラメータチェック関数
+ * @param[in] func:タスクのメイン関数
+ *	@arg 特になし
+ * @param[in] stacksize:ユーザスタック(タスクのスタック)のサイズ
+ *	@arg 特になし
+ * @param[in] rate:周期 
+ * 	@arg 特になし
+ * @param[in] rel_exetim:実行時間(仮想)
+ * 	@arg 特になし
+ * @param[in] deadtim:デッドライン時刻
+ * 	@arg 特になし
+ * @param[in] floatim:余裕時間
+ * 	@arg 特になし
+ * @return エラーコード
+ *	@retval E_PAR:パラメータエラー,E_OK:生成完了
+ */
 static ER check_cre_tsk(TSK_FUNC func, int priority, int stacksize, int rate, int rel_exetim, int deadtim, int floatim)
 {
 	SCHDUL_TYPE schdul_type = g_schdul_info.type;
@@ -136,11 +148,13 @@ static ER check_cre_tsk(TSK_FUNC func, int priority, int stacksize, int rate, in
 
 
 /*!
-* tskid変換テーブル設定処理(acre_tsk():タスクコントロールブロックの生成(ID自動割付))
-* -この関数からmz_acre_tsk()のISRを呼ぶ
-* -IDの割付は0から順番に行う.最大数までいった時は，0に再度戻り検索する(タスクがdeleteされている事があるため)
-* *p : システムコールバッファポインタ
-*/
+ * @brief tskid変換テーブル設定処理(acre_tsk():タスクコントロールブロックの生成(ID自動割付))
+ * @param[out] *p:システムコールバッファポインタ
+ *	@arg NULL以外
+ * @return なし
+ * @note -この関数からmz_acre_tsk()のISRを呼ぶ
+ * 				-IDの割付は0から順番に行う.最大数までいった時は，0に再度戻り検索する(タスクがdeleteされている事があるため)
+ */
 void kernelrte_acre_tsk(SYSCALL_PARAMCB *p)
 {
 	int tskids;
@@ -188,12 +202,13 @@ void kernelrte_acre_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブルの次の割付け可能IDを検索をする関数
-* IDが不足している(ID変換テーブルが不足)場合は倍のID数をとってくる
-* tskid : 割付け可能なID変換テーブルのインデックス
-* (返却値)srh : 検索した割付可能ID
-* (返却値)srh(E_NOID) : 割付け可能なIDが存在しない(メモリ不足)
-*/
+ * @brief 次割付けタスクIDの検索
+ * @param[in] tskid:割付け可能なID変換テーブルのインデックス
+ *	@arg 0以外
+ * @return エラーコードまたはID
+ *	@retval srh:検索した割付可能ID,srh(E_NOID):割付け可能なIDが存在しない(メモリ不足)
+ * @note IDが不足している(ID変換テーブルが不足)場合は倍のID数をとってくる
+ */
 static ER_ID serch_tskid_table(int tskids)
 {
 	ER_ID srh_cuntr; /* 検索するカウンタ */
@@ -222,12 +237,14 @@ static ER_ID serch_tskid_table(int tskids)
 
 
 /*!
-* task IDが足らなくなった場合の処理(次の割付可能ID)
-* IDが不足している(ID変換テーブルが不足)場合は倍のID数をとってきて，変換テーブル，
-* 静的型配列をコピーし，動的型リンクドリストを連結させる
-* (返却値)E_NOMEM : メモリが確保できない
-* (返却値)E_OK : 正常終了
-*/
+ * @brief task IDが足らなくなった場合の処理(次の割付可能ID)
+ * @param[in] なし
+ * @param[out] なし
+ * @return エラーコード
+ *	@retval E_NOMEM:メモリが確保できない,E_OK:正常終了
+ * @note IDが不足している(ID変換テーブルが不足)場合は倍のID数をとってきて，変換テーブル，
+ * 				静的型配列をコピーし，動的型リンクドリストを連結させる
+ */
 static ER pow_tskid_table(void)
 {
 	TCB **tsktbl_tmp, *dtsk_atmp, *dtsk_ftmp;
@@ -254,11 +271,16 @@ static ER pow_tskid_table(void)
 
 
 /*!
-* task IDが足らなくなった時に倍のID変換テーブルへコピーする関数
-* **tsktbl_tmp : 古いtask ID変換テーブル
-* *dtsk_atmp : 古い動的型task aloc list head
-* *dtsk_ftmp : 古い動的型task free list head
-*/
+ * @brief task IDが足らなくなった時に倍のID変換テーブルへコピーする関数
+ * @param[in] なし
+ * @param[out] **tsktbl_tmp:古いtask ID変換テーブル
+ * 	@arg NULL以外
+ * @param[out] *dtsk_atmp:古い動的型task aloc list head
+ * 	@arg NULL以外
+ * @param[out] *dtsk_ftmp:古い動的型task free list head
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void copy_all_tsk(TCB **tsktbl_tmp, TCB *dtsk_atmp, TCB *dtsk_ftmp)
 {
 	int tskids;
@@ -271,12 +293,16 @@ static void copy_all_tsk(TCB **tsktbl_tmp, TCB *dtsk_atmp, TCB *dtsk_ftmp)
 
 
 /*!
-* task IDが足らなくなった時に現在と同じID数を連結し，aloc headとfree headを更新する関数
-* 倍の個数は取得せずにalocリストと同じ数を取得し，alocリスト終端へつなげる
-* tskids : 古いtask ID資源数
-* *dtsk_atmp : 古い動的型task aloc list head
-* *dtsk_ftmp : 古い動的型task free list head
-*/
+ * @brief task IDが足らなくなった時に現在と同じID数を連結し，aloc headとfree headを更新する関数
+ * @param[in] tskids : 古いtask ID資源数
+ * 	@arg 0以外
+ * @param[out] *dtsk_atmp:古い動的型task aloc list head
+ * 	@arg NULL以外
+ * @param[out] *dtsk_ftmp:古い動的型task free list head
+ * 	@arg NULL以外
+ * @return なし
+ * @note 倍の個数は取得せずにalocリストと同じ数を取得し，alocリスト終端へつなげる
+ */
 static void copy_dtsk(TCB *dtsk_atmp, TCB *dtsk_ftmp, int tskids)
 {
 	TCB *oldtcb;
@@ -316,13 +342,12 @@ static void copy_dtsk(TCB *dtsk_atmp, TCB *dtsk_ftmp, int tskids)
 
 
 /*!
-* tskid変換テーブル設定処理(del_tsk():スレッドの排除)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクがすでに未登録状態)
-* (返却値)E_OK : 正常終了
-* (返却値)E_OBJ : エラー終了(タスクがその他の状態)
-*/
+ * @brief tskid変換テーブル設定処理(del_tsk():タスクの排除)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_del_tsk(SYSCALL_PARAMCB *p)
 {
 	ER ercd;
@@ -355,13 +380,12 @@ void kernelrte_del_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(sta_tsk():スレッドの起動)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS エラー終了(対象タスクが未登録)
-* (返却値)E_OK : 正常終了
-* (返却値)E_OBJ : エラー終了(タスクが休止状態ではない)
-*/
+ * @brief tskid変換テーブル設定処理(sta_tsk():タスクの起動)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_sta_tsk(SYSCALL_PARAMCB *p)
 {
 	
@@ -390,16 +414,12 @@ void kernelrte_sta_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* システムコールの処理(acre_tsk():タスクコントロールブロックの生成(ID自動割付)と起動)
-* *p : システムコールバッファポインタ
-* (返却値)E_PAR : システムコールの引数不正
-* (返却値)E_NOID : 動的メモリが取得できない(割付可能なIDがない)
-* (返却値)E_NOMEM : メモリが確保できない
-* (返却値)rcd : 自動割付したID
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(対象タスクが未登録)
-* (返却値)E_OBJ : エラー終了(タスクが休止状態ではない)
-*/
+ * @brief システムコールの処理(run_tsk():タスクコントロールブロックの生成(ID自動割付)と起動)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_run_tsk(SYSCALL_PARAMCB *p)
 {
 
@@ -409,10 +429,14 @@ static void kernelrte_run_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理はいらない(ext_tsk():自タスクの終了)
-* リターンパラメータはあってはならない
-* この関数は他のシステムコールと同様に一貫性を保つために追加した
-*/
+ * @brief tskid変換テーブル設定処理はいらない(ext_tsk():自タスクの終了)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ * @note リターンパラメータはあってはならない
+ * 				この関数は他のシステムコールと同様に一貫性を保つために追加した
+ */
 static void kernelrte_ext_tsk(SYSCALL_PARAMCB *p)
 {
 	getcurrent(); /* システムコール発行タスクをレディーから抜き取る */
@@ -425,10 +449,14 @@ static void kernelrte_ext_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理はいらない(exd_tsk():自スレッドの終了と排除)
-* TCBが排除されるので返却値はなしにする
-* この関数は他のシステムコールと同様に一貫性を保つために追加した
-*/
+ * @brief tskid変換テーブル設定処理はいらない(exd_tsk():自タスクの終了と排除)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ * @note TCBが排除されるので返却値はなしにする
+ * 				この関数は他のシステムコールと同様に一貫性を保つために追加した
+ */
 static void kernelrte_exd_tsk(SYSCALL_PARAMCB *p)
 {
 	getcurrent(); /* システムコール発行タスクをレディーから抜き取る */
@@ -441,14 +469,12 @@ static void kernelrte_exd_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(ter_tsk():スレッドの強制終了)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
-* (返却値)E_ILUSE : エラー終了(タスクが実行状態.つまり自タスク)
-* (返却値)E_OBJ : エラー終了(タスクが休止状態)
-* (返却値)E_OK : 正常終了(タスクが実行可能状態または待ち状態)
-*/
+ * @brief tskid変換テーブル設定処理(ter_tsk():タスクの強制終了)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_ter_tsk(SYSCALL_PARAMCB *p)
 {
 	ER_ID tskid;
@@ -473,14 +499,12 @@ void kernelrte_ter_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(get_pri():スレッドの優先度取得)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
-* (返却値)E_NOSPT : スケジューラが認めていない
-* (返却値)E_OBJ : エラー終了(対象タスクが休止状態)
-* (返却値)E_OK : 正常終了
-*/
+ * @brief tskid変換テーブル設定処理(get_pri():タスクの優先度取得)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_get_pri(SYSCALL_PARAMCB *p)
 {
 	ER_ID tskid = p->un.get_pri.tskid;
@@ -511,15 +535,12 @@ void kernelrte_get_pri(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(chg_pri():スレッドの優先度変更)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
-* (返却値)E_NOSPT : スケジューラが認めていない
-* (返却値)E_PAR : エラー終了(tskpriが不正)
-* (返却値)E_OBJ : エラー終了(タスクが休止状態)
-* (返却値)E_OK : 正常終了
-*/
+ * @brief tskid変換テーブル設定処理(chg_pri():タスクの優先度変更)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_chg_pri(SYSCALL_PARAMCB *p)
 {
 	ER_ID tskid = p->un.chg_pri.tskid;
@@ -548,11 +569,12 @@ static void kernelrte_chg_pri(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理はいらない(slp_tsk():自タスクの起床待ち)
-* *p : システムコールバッファポインタ
-* (返却値)E_NOSPT : 未サポート
-* (返却値)E_OK : 正常終了
-*/
+ * @brief tskid変換テーブル設定処理はいらない(slp_tsk():自タスクの起床待ち)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_slp_tsk(SYSCALL_PARAMCB *p)
 {
 	SCHDUL_TYPE type = g_schdul_info.type;
@@ -573,14 +595,12 @@ static void kernelrte_slp_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(wup_tsk():タスクの起床)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
-* (返却値)E_OBJ : 対象タスクが休止状態
-* (返却値)E_ILUSE : システムコール不正使用(要求タスクが実行状態または，何らかの待ち行列につながれている)
-* (返却値)E_OK : 正常終了
-*/
+ * @brief tskid変換テーブル設定処理(wup_tsk():タスクの起床)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_wup_tsk(SYSCALL_PARAMCB *p)
 {
 	ER_ID tskid = p->un.wup_tsk.tskid;
@@ -604,13 +624,12 @@ static void kernelrte_wup_tsk(SYSCALL_PARAMCB *p)
 
 
 /*!
-* tskid変換テーブル設定処理(rel_wai():待ち状態強制解除)
-* *p : システムコールバッファポインタ
-* (返却値)E_ID : エラー終了(タスクIDが不正)
-* (返却値)E_NOEXS : エラー終了(タスクが未登録状態)
-* (返却値)E_OBJ : 対象タスクが待ち状態ではない
-* (返却値)E_OK : 正常終了
-*/
+ * @brief tskid変換テーブル設定処理(rel_wai():待ち状態強制解除)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_rel_wai(SYSCALL_PARAMCB *p)
 {
 	ER_ID tskid = p->un.rel_wai.tskid;
@@ -634,9 +653,12 @@ static void kernelrte_rel_wai(SYSCALL_PARAMCB *p)
 
 
 /*!
-* システムコール処理(get_mpf():動的メモリ獲得)
-* *p : システムコールバッファポインタ
-*/
+ * @brief システムコール処理(get_mpf():動的メモリ獲得)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_get_mpf(SYSCALL_PARAMCB *p)
 {
 	int size = p->un.get_mpf.size;
@@ -648,10 +670,13 @@ static void kernelrte_get_mpf(SYSCALL_PARAMCB *p)
 }
 
 
-/*! 
-*システムコール処理(rel_mpf():動的メモリ解放)
-* *p : システムコールバッファポインタ
-*/
+/*!
+ * @brief システムコール処理(rel_mpf():動的メモリ解放)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 static void kernelrte_rel_mpf(SYSCALL_PARAMCB *p)
 {
 	char *ptr = p->un.rel_mpf.p;
@@ -665,12 +690,12 @@ static void kernelrte_rel_mpf(SYSCALL_PARAMCB *p)
 
 
 /*!
-* 変換テーブル設定処理はいらない(def_inh():割込みハンドラの定義)
-* *p : システムコールバッファポインタ
-* (返却値)E_ILUSE : 不正使用
-* (返却値)E_PAR : パラメータエラー
-* (返却値)E_OK : 登録完了
-*/
+ * @brief 変換テーブル設定処理はいらない(def_inh():割込みハンドラの定義)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_def_inh(SYSCALL_PARAMCB *p)
 {
 	INTRPT_TYPE type = p->un.def_inh.type;
@@ -684,11 +709,12 @@ void kernelrte_def_inh(SYSCALL_PARAMCB *p)
 
 
 /*!
-* 変換テーブル設定処理はいらない(sel_schdul():スケジューラの切り替え)
-* *p : システムコールバッファポインタ
-* (返却値)E_PAR : パラメータエラー
-* (返却値)E_OK : 正常終了
-*/
+ * @brief 変換テーブル設定処理はいらない(sel_schdul():スケジューラの切り替え)
+ * @param[in] なし
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ */
 void kernelrte_sel_schdul(SYSCALL_PARAMCB *p)
 {
 	SCHDUL_TYPE type = p->un.sel_schdul.type;
@@ -702,10 +728,15 @@ void kernelrte_sel_schdul(SYSCALL_PARAMCB *p)
 
 
 /*!
-* 非タスクコンテキスト用システムコール呼び出しライブラリ関数
-* これはタスクコンテキスト用システムコール呼び出しと一貫性を保つため追加した
-* トラップの発行は行わない
-*/
+ * @brief 非タスクコンテキスト用システムコール呼び出しライブラリ関数
+ * @param[in] type:割込みタイプ
+ *	@arg ISR_NUM
+ * @param[out] *p:システムコールバッファポインタ
+ * 	@arg NULL以外
+ * @return なし
+ * @note これはタスクコンテキスト用システムコール呼び出しと一貫性を保つため追加した
+ *			 トラップの発行は行わない
+ */
 void isyscall_intr(ISR_ITYPE type, SYSCALL_PARAMCB *p)
 {
 	ER *ercd;
@@ -724,7 +755,7 @@ void isyscall_intr(ISR_ITYPE type, SYSCALL_PARAMCB *p)
 		* システムコールのラッパーでシステムコール発行タスクをレディーへ戻す処理が
 		* があるので，不整合が起こる(非タスクコンテキスト用システムコールはタスクを
 		* スイッチングしない)ここで，g_currentのシステムコールフラグを非タスクコンテ
-		*キスト用にしておく事によってputcurrent()及びgetcurrent()ではじかれるようになる
+		* キスト用にしておく事によってputcurrent()及びgetcurrent()ではじかれるようになる
 		* 非タスクコンテキスト用システムコールは外部割込みなどの延長上(単なる関数呼び出し)
 		* で呼ばれるので，外部割込みが終了した時にスケジューラが起動される事となる
 		*/
@@ -739,10 +770,13 @@ void isyscall_intr(ISR_ITYPE type, SYSCALL_PARAMCB *p)
 
 
 /*!
- * スケジューラとディスパッチャの呼び出し
- * (返却値)E_OK : 正常終了
- * ・実質上記のエラーコードは返却されない
- * ・システムコールの場合は，システムコントロールブロックのretをユーザタスク側の返却値とする
+ * @brief スケジューラとディスパッチャの呼び出し
+ * @param[in] type:割込みタイプ
+ *	@arg INTR_NUM
+ * @param[out] なし
+ * @return なし
+ * @note ・実質上記のエラーコードは返却されない
+ * 				・システムコールの場合は，システムコントロールブロックのretをユーザタスク側の返却値とする
  */
 void context_switching(INTR_TYPE type)
 {
@@ -759,14 +793,17 @@ void context_switching(INTR_TYPE type)
 
 
 /*!
-* 外部割込みハンドラを呼び出す準備
-* ・外部割込み(シリアル割込み，タイマ割込み)はカレントタスクのスタックへコンテキストを保存し，
-* 　スケジューラ→ディスパッチャという順となる
-* type : 外部割込みのタイプ
-* sp : タスクコンテキストのポインタ
-* (返却値)E_OK : 正常終了(実質上記のエラーコードは返却されない)
-* (返却値)EV_NORTE : ハンドラが未登録
-*/
+ * @brief 外部割込みハンドラを呼び出す準備
+ * @param[in] type:割込みタイプ
+ *	@arg INTR_NUM
+ * @param[in] sp:タスクコンテキストのポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return エラーコード
+ *	@retval E_OK:正常終了(実質上記のエラーコードは返却されない),EV_NORTE:ハンドラが未登録
+ * @note ・外部割込み(シリアル割込み，タイマ割込み)はカレントタスクのスタックへコンテキストを保存し，
+ * 　			スケジューラ→ディスパッチャという順となる
+ */
 ER external_intr(INTR_TYPE type, UINT32 sp)
 {
 	
@@ -787,11 +824,15 @@ ER external_intr(INTR_TYPE type, UINT32 sp)
 
 
 /*!
-* システムコール割込みハンドラ(ISR)を呼び出す準備
-* ・カレントタスクのスタックへコンテキストを保存し，スケジューラ→ディスパッチャという順となる
-* type : ISRのタイプ
-* sp : タスクコンテキストのポインタ
-*/
+ * @brief システムコール割込みハンドラ(ISR)を呼び出す準備
+ * @param[in] type:システムコールのタイプ
+ *	@arg ISR_NUM
+ * @param[in] sp:タスクコンテキストのポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
+ * @note ・カレントタスクのスタックへコンテキストを保存し，スケジューラ→ディスパッチャという順となる
+ */
 void syscall_intr(ISR_TYPE type, UINT32 sp)
 {
 	ER *ercd;
@@ -818,11 +859,16 @@ void syscall_intr(ISR_TYPE type, UINT32 sp)
 
 
 /*!
-* トラップ発行(システムコール)
-* type : システムコールのタイプ
-* *param : システムコールパケットへのポインタ
-* ret : システムコール返却値格納ポインタ
-*/
+ * @brief TCBのシステムコールバッファへシステムコールパラメータ退避
+ * @param[in] type:システムコールのタイプ
+ *	@arg ISR_NUM
+ * @param[out] *param:システムコールパケットへのポインタ
+ *	@arg NULL以外
+ * @param[ret] ret:システムコールリターンパラメータバッファ
+ *	@arg 特になし
+ * @param[out] なし
+ * @return なし
+ */
 void issue_trap_syscall(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
 {
   g_current->syscall_info.type  = type;
@@ -832,7 +878,12 @@ void issue_trap_syscall(ISR_TYPE type, SYSCALL_PARAMCB *param, OBJP ret)
 }
 
 
-/*! ディスパッチャの初期化 */
+/*!
+ * @brief ディスパッチャの初期化
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 static void dispatch_init(void)
 {
 	g_dsp_info.flag = TRUE;
@@ -840,7 +891,12 @@ static void dispatch_init(void)
 }
 
 
-/*! デフォルトのスケジューラを登録する関数 */
+/*!
+ * @brief デフォルトのスケジューラを登録する関数
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 static void set_schdul_init_tsk(void)
 {
 	/* 割込みサービスルーチンを直接呼ぶ */
@@ -849,7 +905,12 @@ static void set_schdul_init_tsk(void)
 }
 
 
-/*! kernelオブジェクトの初期化を行う */
+/*!
+ * @brief kernelオブジェクトの初期化を行う
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 void kernel_obj_init(void)
 {
   dispatch_init(); /* ディスパッチャの初期化 */
@@ -881,14 +942,21 @@ void kernel_obj_init(void)
 
 
 /*!
- * initタスクの生成と起動を行う
- * -initタスクを起動する時にはシステムコールは使用できないため，生成と起動は直接内部関数を呼ぶ
- * func : タスクのメイン関数
- * *name : タスクの名前
- * priority : タスクの優先度
- * stacksize : ユーザスタック(タスクのスタック)のサイズ
- * argc : タスクのメイン関数の第一引数
- * argv[] : タスクのメイン関数の第二引数
+ * @brief initタスクの生成と起動を行う
+ * @param[in] func:タスクのメイン関数
+ *	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[out] *name : タスクの名前
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] priority : タスクの優先度
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] stacksize : ユーザスタック(タスクのスタック)のサイズ
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] argc : タスクのメイン関数の第一引数
+ * 	@arg 特になし
+ * @param[out] *argv[] : タスクのメイン関数の第二引数
+ * 	@arg 特になし
+ * @return なし
+ * @note -initタスクを起動する時にはシステムコールは使用できないため，生成と起動は直接内部関数を呼ぶ
  */
 void start_init_tsk(TSK_FUNC func, char *name, int priority, int stacksize,
 		      int argc, char *argv[])
@@ -916,14 +984,21 @@ void start_init_tsk(TSK_FUNC func, char *name, int priority, int stacksize,
 
 
 /*!
- * kernelの初期化を行う
- * -具体的には，スケジューリングの設定，kernelオブジェクトの初期化，initタスクの生成と起動を行う
- * func : タスクのメイン関数
- * *name : タスクの名前
- * priority : タスクの優先度
- * stacksize : ユーザスタック(タスクのスタック)のサイズ
- * argc : タスクのメイン関数の第一引数
- * argv[] : タスクのメイン関数の第二引数
+ * @brief kernelの初期化を行う
+ * @param[in] func:タスクのメイン関数
+ *	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[out] *name : タスクの名前
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] priority : タスクの優先度
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] stacksize : ユーザスタック(タスクのスタック)のサイズ
+ * 	@arg 特になし(延長上でエラーチェックを行う)
+ * @param[in] argc : タスクのメイン関数の第一引数
+ * 	@arg 特になし
+ * @param[out] *argv[] : タスクのメイン関数の第二引数
+ * 	@arg 特になし
+ * @return なし
+ * @note -具体的には，スケジューリングの設定，kernelオブジェクトの初期化，initタスクの生成と起動を行う
  */
 void kernel_init(TSK_FUNC func, char *name, int priority, int stacksize,
 	      int argc, char *argv[])
@@ -938,7 +1013,12 @@ void kernel_init(TSK_FUNC func, char *name, int priority, int stacksize,
 }
 
 
-/*! OSの致命的エラー時 */
+/*!
+ * @brief OSの致命的エラー時
+ * @param[in] なし
+ * @param[out] なし
+ * @return なし
+ */
 void down_system(void)
 {
   KERNEL_OUTMSG("system error! kernel freeze!\n");

@@ -1,0 +1,133 @@
+～目次～
+ 構成ディレクトリの説明
+ 各ファイルの説明
+ 使用ツール
+ OSビルド関連
+ OS実効関連
+ OS起動
+ ソースコードリーディング
+ 
+
+
+[構成ディレクトリの説明]
+　○ arch/cpu : CPU依存部(ARM-Cortex-A8)
+　○ arch/gcc : コンパイラ依存部(gcc4.x)
+　○ c_lib    : 簡単なC標準ライブラリ関数類(まだライブラリにはしていません)
+　○ doc      : ドキュメント類
+　○ kernel   : kernelの機能(ターゲット非依存部)
+　○ net      : 転送プロトコル(ログの送信に使用しています)
+　○ target   : borad依存部(beagle-borad-xM)
+　○ tsk_lib  : 簡単なサンプルタスク類(まだライブラリにはしていません)
+
+
+[各ファイルの説明]
+　○ arch/cpu/cpu_cntrl.h						: CPSRののマクロを定義
+	○ arch/cpu/intr.h									: IRQ周り
+	○ arch/cpu/intr_cntrl.c						: MIR操作
+	○ arch/cpu/intr_cntrl.h						: MIR定義
+	○ arch/cpu/intr_hadle.c						: 割り込みハンドラ
+	○ arch/cpu/intr_hadle.h						: 割り込みハンドラインターフェース
+	○ arch/cpu/main.h									: kernel main
+	○ arch/cpu/startup.S							: startup
+
+	○ arch/gcc/_divsi3.S							: 乗算、除算関連
+	○ arch/gcc/_udivsi3.S							: 乗算、除算関連
+	○ arch/gcc/div0.c									: 乗算、除算関連
+
+	○ c_lib/lib.c											: 簡易C標準ライブラリ関数
+	○ c_lib/lib.h											: 簡易C標準ライブラリ関数のインターフェース
+
+	○ kernel/command.c								: OSを操作する基本コマンド
+	○ kernel/command.h								: OSを操作する基本コマンドインターフェース
+	○ kernel/defines.h								: 型、エラーコードを定義
+	○ kernel/init_tsk.c								: kernelのinit後、起動するタスク
+	○ kernel/intr_manage.c						: 割込み管理機能
+	○ kernel/intr_manage.h						: 割込み管理機能インターフェース
+	○ kernel/kernel.c									: kernelのinit、カーネルコア、カーネルコアメカニズム
+	○ kernel/kernel.h									: kernel.cのインターフェース
+	○ kernel/kernel.scr								: リンカ設定(linkerscript)、メモリマップ
+	○ kernel/memory.c									: heap管理(動的メモリ)
+	○ kernel/memory.h									: heap管理(動的メモリ)インターフェース
+	○ kernel/multi_timer.c						: タイママルチ管理
+	○ kernel/muleti_timer.h						: タイママルチ管理インターフェース
+	○ kernel/ready.c									: レディー状態管理
+	○ kernel/ready.h									: レディー状態管理インターフェース
+	○ kernel/scheduler.c							: スケジューリングポリシー
+	○ kernel/scheduler.h							: スケジューリングポリシーのインターフェース
+	○ kernel/syscall.c								: システムコール管理
+	○ kernel/syscall.h								: システムコール管理インターフェース
+	○ kernel/task.h										: タスクメカニズム、タスク周り操作マクロ定義
+	○ kernel/task_manage.c						: タスク管理
+	○ kernel/task_manage.h						: タスク管理インターフェース
+	○ kernel/task_sync.c							: タスク付属同期
+	○ kernel/task_sync.h							: タスク付属同期インターフェース
+
+	○ kernel_svc/log_manage.c					: ロギング
+	○ kernel_svc/log_manage.h					: ログ管理インターフェース
+
+	○ net/jis_ctrl_crd.h							: 制御コード定義(JIS X 0211~C0集合)
+	○ net/xmodem.c										: xmodem転送プロトコル(送信)
+	○ net/xmodem.h										: xmodem転送プロトコル(送信)インターフェース
+
+	○ target/driver/serial_driver.c 	: UARTドライバ
+	○ target/driver/serial_driver.h 	: UARTドライバのインターフェース
+	○ target/driver/timer_driver.c	 	: タイマドライバ
+	○ target/driver/timer_driver.h	 	: タイマドライバインターフェース
+
+	○ tsk_lib/tsk_set1								: サンプルタスクセット
+	○ tsk_lib/tsk_set2								: サンプルタスクセット
+	○ tsk_lib/tsk_set3								: サンプルタスクセット
+
+
+[使用ツール]
+	使用しているツールを列挙します．
+　○ CodeSourcery
+		主に、以下を使用しています．
+		● as(アセンブリ)
+		● gcc4.5.2(コンパイルチェーン)
+		● ld(リンクユーティリティ)
+		以下があると便利です．
+		● ar(アーカイバ)
+		● nm(シンボル関連)
+		● objcopy(実効フォーマット変換)
+		● objdump(実効フォーマット操作)
+		● strip(シンボルテーブル最適化)
+	○ git(バージョン管理)
+	○ make(ソース，ビルド管理)
+	○ doxygen(コードドキュメント管理)
+	○ graphviz(コード可視化)
+	○ uboot(ブートローダ)
+		● mkimage(OSを圧縮して展開、実効する場合)
+	○ minicomやterateam等のエミュレータ(動作確認用)
+
+
+[OSビルド関連]
+　makeを使用しています。具体的には、複数のディレクトリに分散したファイルを一度トップディレクトリにかき集める(include directive)を使用し、依存関係を解析し、各モジュールを生成し、一度objsディレクトリに集める。そして、モジュールのリンク順序を求め、kernel.scrの設定にしたがい、binディレクトリに実効フォーマットを生成します。
+　OSのソースファイルの位置に従って、Makefileのパスを変更して下さい。また、ubootを任意の位置に置いて下さい(Makefile参照)
+○ OSのビルドと実効フォーマット(通常)
+>% make			//OSビルド
+>% make bin //OS実効フォーマットをuboot形式に変換
+
+○ OSのビルドと実効フォーマット(OS圧縮イメージ)
+>% make				// OSビルド
+>% make image	// OSを圧縮(ubootのmkimageを使用する)
+
+○ クリーン
+>% make clean
+
+
+[OS実効関連]
+　ubootのマニュアル参照して下さい．[使用ツール]で挙げたエミュレータ上で操作します．
+(例1) OSを転送プロトコルで転送
+　ymodem等のmodemプロトコル，TFTPブート等が使用できます．転送プロトコルによっては、拡張ユーティリティが必要になります．
+(例2) OSを実機のSDカードに置いてブート
+　本OSは、beagle-borad-xMを使用しています．このボードは、NANDが無く、SDカードがあります(注:beagle-boradだとNANDあり)
+つまり、ROM化はいりません。そのため、ライターも必要ありません。
+
+
+[OS起動]
+　OS起動後はコマンドで操作します.helpコマンドで一覧を表示できます．
+
+
+[ソースコードリーディング]
+　ソースコードリーディングの際には,TAB幅を2に設定して下さい．

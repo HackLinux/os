@@ -1,4 +1,10 @@
-/* CPSRののマクロを定義 */
+/*!
+ * @file ターゲット依存部(ARM-Cortex-A8)
+ * @brief CPSRののマクロを定義
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
 
 #ifndef _CPU_CNTRL_H_INCLUDED_
 #define _CPU_CNTRL_H_INCLUDED_

@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:memory.o>
+ * @brief heap管理(動的メモリ)
+ * @attention gcc4.5.x以外は試していない、heapサイズのレンジに注意
+ */
+
+
 /* os/kernel */
 #include "defines.h"
 #include "kernel.h"
@@ -7,15 +14,18 @@
 
 
 /*!
- * メモリ・ブロック構造体
- * (獲得された各領域は，先頭に以下の構造体を持っている)
+ * @brief メモリブロック構造体
+ * @note (獲得された各領域は，先頭に以下の構造体を持っている)
  */
 typedef struct _mem_block {
   struct _mem_block *next;
   int size;
 } MEM_BLOCK;
 
-/*! メモリプール */
+
+/*!
+ * @brief メモリプール
+ */
 typedef struct _mem_pool {
   int size;
   int num;

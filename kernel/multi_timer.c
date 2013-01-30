@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:multi_timer.o>
+ * @brief タイママルチ管理
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/kernel */
 #include "multi_timer.h"
 #include "kernel.h"

@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief タイママルチ管理インターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _MULTI_TIMER_H_INCLUDED_
 #define _MULTI_TIMER_H_INCLUDED_
 
@@ -11,7 +18,9 @@
 #define OTHER_MAKE_TIMER 				(1 << 0)	/*! 上記以外が使用するタイマを記録する */
 
 
-/*! タイマコントロールブロック*/
+/*!
+ * @brief タイマコントロールブロック
+ */
 typedef struct _timer_struct {
 	struct _timer_struct *next;							/*! 次ポインタ*/
 	struct _timer_struct *prev;							/*! 前ポインタ*/
@@ -22,7 +31,9 @@ typedef struct _timer_struct {
 	void *argv;															/*! コールバックルーチンへのポインタ */
 } TMRCB;
 
-/*! タイマキュー型構造体 */
+/*!
+ * @brief タイマキュー型構造体(タイママルチ管理メカニズム)
+ */
 typedef struct _timer_queue {
 	TMRCB *tmrhead;													/*! タイマコントロールブロックの先頭ポインタ */
 	int index;															/*! タイマ番号 */

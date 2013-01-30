@@ -1,18 +1,16 @@
-#################################################################################
-# CFLAGS																																				#
-# -nostdinc					: ヘッダファイルのための標準システムディレクトリを検索しない			#
-# -nostdlib					: 標準ライブラリ等を使用しない																#
-# -fno-builtin			: ビルドイン関数の無効																				#
-# -fsigned-char			: char型を自動的にunsinged charとしない												#
-#・ABIオプション																																	#
-# -mabi=apcs-gnu 		: GNU ABIインターフェース																			#
-# imabi=aapcs-linux	: Version ? EABIインターフェース															#
-# なし 							: Version ? EABIインターフェース															#
-#・アーキテクチャ																																	#
-# -march 						: 指定したCPUだけで動作するコードを生成 -mcpuより速いコード生成	#
-# -mcpu 						: 同系列のCPUでも動作するコード生成														#
-# -mtune 						: -mcpuの別名(gcc3.4以降)																		#
-################################################################################
+# CFLAGS
+# -nostdinc					: ヘッダファイルのための標準システムディレクトリを検索しない	
+# -nostdlib					: 標準ライブラリ等を使用しない
+# -fno-builtin			: ビルドイン関数の無効
+# -fsigned-char			: char型を自動的にunsinged charとしない	
+#・ABIオプション
+# -mabi=apcs-gnu 		: GNU ABIインターフェース
+# imabi=aapcs-linux	: Version ? EABIインターフェース
+# なし 							: Version ? EABIインターフェース
+#・アーキテクチャ	
+# -march 						: 指定したCPUだけで動作するコードを生成 -mcpuより速いコード生成
+# -mcpu 						: 同系列のCPUでも動作するコード生成
+# -mtune 						: -mcpuの別名(gcc3.4以降)
 
 
 PREFIX	= $(HOME)/CodeSourcery/Sourcery_G++_Lite
@@ -147,4 +145,4 @@ image : $(TARGET).bin
 clean :
 	rm -f $(OBJS) $(TARGET) $(TARGET).bin $(TARGET)~ $(TARGET).bin~
 	rm -f *~ $(ARCH_CPU_DIR)*.*~ $(TARGET_DRIVER_DIR)*.*~ $(ARCH_GCC_DIR)*.*~ $(KERNEL_DIR)*.*~ \
-        $(KERNEL_SVC_DIR)*.*~ $(NET_DIR)*.*~ $(CLIB_DIR)*.*~ $(TSKLIB_DIR)*.*~ *.*~
+        $(KERNEL_SVC_DIR)*.*~ $(NET_DIR)*.*~ $(CLIB_DIR)*.*~ $(TSKLIB_DIR)*.*~ objs/*.*~ bin/*.*~ doc/*.*~ *.*~ *~

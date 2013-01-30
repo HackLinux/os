@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット非依存部(依存部も少々あり)<モジュール:lib.o>
+ * @brief 簡易C標準ライブラリ関数
+ * @attention gcc4.5.x以外は試していない
+ * @note ターゲット非依存部と依存部は完全に切り分ける
+ */
+
+
 /* os/c_lib */
 #include "lib.h"
 /* os/target/driver */

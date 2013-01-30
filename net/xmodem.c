@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部<モジュール:xmodem.o>
+ * @brief xmodem転送プロトコル(送信)
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 /* os/net */
 #include "jis_ctrl_crd.h"
 #include "xmodem.h"

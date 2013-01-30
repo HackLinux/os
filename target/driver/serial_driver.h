@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット依存部<モジュール:serial_driver.o>
+ * @brief UARTドライバのインターフェース
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 #ifndef _SERIAL_DRIVER_H_INCLUDED_
 #define _SERIAL_DRIVER_H_INCLUDED_
 

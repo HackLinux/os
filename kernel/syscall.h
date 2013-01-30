@@ -1,3 +1,10 @@
+/*!
+ * @file ターゲット非依存部
+ * @brief システムコール管理インターフェース
+ * @attention gcc4.5.x以外は試していない
+ */
+
+
 #ifndef _SYSCALL_H_INCLUDED_
 #define _SYSCALL_H_INCLUDED_
 
@@ -39,10 +46,16 @@ typedef enum {
 } ISR_ITYPE;
 
 
-/*! システムコール呼び出し時のパラメータ&リターンパラメータ退避領域 */
+/*!
+ * @brief システムコール呼び出し時のパラメータ&リターンパラメータ退避領域
+ * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+ */
 typedef struct {
   union {
-		/*! タスクの生成 */
+		/*!
+		 * @brief タスクの生成
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
       TSK_FUNC func;
       char *name;
@@ -56,17 +69,26 @@ typedef struct {
       char **argv;
       ER_ID ret;
     } acre_tsk;
-		/*! タスクの排除  */
+		/*!
+		 * @brief タスク排除
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	ER ret;
     } del_tsk;
-		/*! タスクの起動 */
+		/*!
+		 * @brief タスク起動
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	ER ret;
     } sta_tsk;
-		/*! タスクの生成と起動  */
+		/*!
+		 * @brief タスク生成と起動
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
       TSK_FUNC func;
       char *name;
@@ -80,63 +102,99 @@ typedef struct {
       char **argv;
       ER_ID ret;
     } run_tsk;
-		/*! タスクの終了  */
+		/*!
+		 * @brief タスク終了
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	int dmummy;
     } ext_tsk;
-		/*! タスクの終了と排除  */
+		/*!
+		 * @brief タスク終了と排除
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
       int dummy;
     } exd_tsk;
-		/*! タスクの強制解除  */
+		/*!
+		 * @brief タスク強制終了
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	ER ret;
     } ter_tsk;
-		/*! タスクの優先度取得 */
+		/*!
+		 * @brief タスク優先度取得
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	int *p_tskpri;
     	ER ret;
     } get_pri;
-		/*! タスクの優先度変更  */
+		/*!
+		 * @brief タスク優先度変更
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	int tskpri;
     	ER ret;
     } chg_pri;
-		/*! タスクの起床待ち  */
+		/*!
+		 * @brief タスク起床待ち
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER ret;
     } slp_tsk;
-		/*! タスクの起床  */
+		/*!
+		 * @brief タスク起床
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	ER ret;
     } wup_tsk;
-		/*! タスク待ち状態強制解除 */
+		/*!
+		 * @brief タスク待ち状態強制解除
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
     	ER_ID tskid;
     	ER ret;
     } rel_wai;
-		/*! 固定長メモリブロック取得 */
+		/*!
+		 * @brief 固定長メモリブロック取得
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
       int size;
       void *ret;
     } get_mpf;
-		/*! 固定長メモリブロック解放 */
+		/*!
+		 * @brief 固定長メモリブロック解放
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
     struct {
       char *p;
       int ret;
     } rel_mpf;
-		/*! 割込みハンドラの登録 */
+		/*!
+		 * @brief 割込みハンドラの登録
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 */
 		struct {
       INTRPT_TYPE type;
       IR_HANDL handler;
       ER ret;
     } def_inh;
-		/*! タスクスケジューラ動的切り替え */
-		/* サービスコールのみとなるので，実際はいらないが，他と一貫性と保つため */
+		/*!
+		 * @brief タスクスケジューラ動的切り替え
+		 * @attention unionはメモリ効率が良いが、エンディアンの関係上、移植には注意
+		 * @note サービスコールのみとなるので，実際はいらないが，他と一貫性と保つため
+		 */
 		struct {
 			SCHDUL_TYPE type;
 			long param;

@@ -1,3 +1,11 @@
+/*!
+ * @file ターゲット依存部(ARM-Cortex-A8)<モジュール:intr_hadle.o>
+ * @brief 割り込みハンドラ
+ * @attention gcc4.5.x以外は試していない
+ * @note DM3730CPUマニュアル参照
+ */
+
+
 /* os/arch/cpu */
 #include "cpu_cntrl.h"
 #include "intr_cntrl.h"
@@ -13,8 +21,11 @@
 
 
 /*!
- * 未定義命令ハンドラ
- * sp : スタックポインタ
+ * @brief 未定義命令ハンドラ
+ * @param[in] sp:スタックポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
  */
 void intr_und(unsigned long sp)
 {
@@ -40,8 +51,11 @@ void intr_und(unsigned long sp)
 
 
 /*!
- * SVC割込みハンドラ
- * sp : スタックポインタ
+ * @brief SVC割込みハンドラ
+ * @param[in] sp:スタックポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
  */
 void intr_swi(unsigned long sp)
 {
@@ -73,8 +87,11 @@ void intr_swi(unsigned long sp)
 
 
 /*!
- * プリフェッチアボートハンドラ
- * sp : スタックポインタ
+ * @brief プリフェッチアボートハンドラ
+ * @param[in] sp:スタックポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
  */
 void intr_pabort(unsigned long sp)
 {
@@ -92,8 +109,11 @@ void intr_pabort(unsigned long sp)
 
 
 /*!
- * データアボートハンドラ
- * sp : スタックポインタ
+ * @brief データアボートハンドラ
+ * @param[in] sp:スタックポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
  */
 void intr_dabort(unsigned long sp)
 {
@@ -112,8 +132,15 @@ void intr_dabort(unsigned long sp)
 
 
 /*!
- * IRQハンドラ
- * sp : スタックポインタ
+ * @brief IRQハンドラ
+ * @param[in] sp:スタックポインタ
+ *	@arg 90002000~90003000
+ * @param[out] なし
+ * @return なし
+ * @note 割込みコントローラのアサート取り消し
+ * 				具体的には，INTCPS_CONTROL[0] NEWIRQAGRビットを1にし，同期バリアを張る
+ *				このようにする事で，INTCPS_CONTROL[0] NEWIRQAGRビットを1→CPSRのIRQ割込み有効化の順序が保証される
+ *			  これは，IRQのネストが発生を防ぐためである(上記の順序が逆になると，ネストし，割込みハンドラ内で無限ループする)．
  */
 void intr_irq(unsigned long sp)
 {
@@ -125,9 +152,6 @@ void intr_irq(unsigned long sp)
 	external_intr(type, sp);
 	/*
 	* 割込みコントローラのアサート取り消し
-	* -具体的には，INTCPS_CONTROL[0] NEWIRQAGRビットを1にし，同期バリアを張る
-	*  このようにする事で，INTCPS_CONTROL[0] NEWIRQAGRビットを1→CPSRのIRQ割込み有効化の順序が保証される
-	*  これは，IRQのネストが発生を防ぐためである(上記の順序が逆になると，ネストし，割込みハンドラ内で無限ループする)．
 	*/
 	REG32_WRITE(INTCPS_CONTROL, REG32_READ(INTCPS_CONTROL) | 0x01);
 	
