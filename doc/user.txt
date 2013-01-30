@@ -10,73 +10,130 @@
 
 
 [構成ディレクトリの説明]
-　○ arch/cpu : CPU依存部(ARM-Cortex-A8)
-　○ arch/gcc : コンパイラ依存部(gcc4.x)
-　○ c_lib    : 簡単なC標準ライブラリ関数類(まだライブラリにはしていません)
-　○ doc      : ドキュメント類
-　○ kernel   : kernelの機能(ターゲット非依存部)
-　○ net      : 転送プロトコル(ログの送信に使用しています)
-　○ target   : borad依存部(beagle-borad-xM)
-　○ tsk_lib  : 簡単なサンプルタスク類(まだライブラリにはしていません)
+　○ arch/cpu
+		: CPU依存部(ARM-Cortex-A8)
+　○ arch/gcc
+		: コンパイラ依存部(gcc4.x)
+　○ c_lib
+		: 簡単なC標準ライブラリ関数類(まだライブラリにはしていません)
+　○ doc
+		: ドキュメント類
+　○ kernel
+		: kernelの機能(ターゲット非依存部)
+　○ net
+		: 転送プロトコル(ログの送信に使用しています)
+　○ target
+		: borad依存部(beagle-borad-xM)
+　○ tsk_lib
+		: 簡単なサンプルタスク類(まだライブラリにはしていません)
 
 
 [各ファイルの説明]
-　○ arch/cpu/cpu_cntrl.h						: CPSRののマクロを定義
-	○ arch/cpu/intr.h									: IRQ周り
-	○ arch/cpu/intr_cntrl.c						: MIR操作
-	○ arch/cpu/intr_cntrl.h						: MIR定義
-	○ arch/cpu/intr_hadle.c						: 割り込みハンドラ
-	○ arch/cpu/intr_hadle.h						: 割り込みハンドラインターフェース
-	○ arch/cpu/main.h									: kernel main
-	○ arch/cpu/startup.S							: startup
+　○ arch/cpu/cpu_cntrl.h
+		: CPSRののマクロを定義
+	○ arch/cpu/intr.h	
+		: IRQ周り
+	○ arch/cpu/intr_cntrl.c	
+		: MIR操作
+	○ arch/cpu/intr_cntrl.h	
+		: MIR定義
+	○ arch/cpu/intr_hadle.c	
+		: 割り込みハンドラ
+	○ arch/cpu/intr_hadle.h	
+		: 割り込みハンドラインターフェース
+	○ arch/cpu/main.h	
+		: kernel main
+	○ arch/cpu/startup.S
+		: startup
 
-	○ arch/gcc/_divsi3.S							: 乗算、除算関連
-	○ arch/gcc/_udivsi3.S							: 乗算、除算関連
-	○ arch/gcc/div0.c									: 乗算、除算関連
+	○ arch/gcc/_divsi3.S
+		: 乗算、除算関連
+	○ arch/gcc/_udivsi3.S	
+		: 乗算、除算関連
+	○ arch/gcc/div0.c	
+		: 乗算、除算関連
 
-	○ c_lib/lib.c											: 簡易C標準ライブラリ関数
-	○ c_lib/lib.h											: 簡易C標準ライブラリ関数のインターフェース
+	○ c_lib/lib.c	
+		: 簡易C標準ライブラリ関数
+	○ c_lib/lib.h	
+		: 簡易C標準ライブラリ関数のインターフェース
 
-	○ kernel/command.c								: OSを操作する基本コマンド
-	○ kernel/command.h								: OSを操作する基本コマンドインターフェース
-	○ kernel/defines.h								: 型、エラーコードを定義
-	○ kernel/init_tsk.c								: kernelのinit後、起動するタスク
-	○ kernel/intr_manage.c						: 割込み管理機能
-	○ kernel/intr_manage.h						: 割込み管理機能インターフェース
-	○ kernel/kernel.c									: kernelのinit、カーネルコア、カーネルコアメカニズム
-	○ kernel/kernel.h									: kernel.cのインターフェース
-	○ kernel/kernel.scr								: リンカ設定(linkerscript)、メモリマップ
-	○ kernel/memory.c									: heap管理(動的メモリ)
-	○ kernel/memory.h									: heap管理(動的メモリ)インターフェース
-	○ kernel/multi_timer.c						: タイママルチ管理
-	○ kernel/muleti_timer.h						: タイママルチ管理インターフェース
-	○ kernel/ready.c									: レディー状態管理
-	○ kernel/ready.h									: レディー状態管理インターフェース
-	○ kernel/scheduler.c							: スケジューリングポリシー
-	○ kernel/scheduler.h							: スケジューリングポリシーのインターフェース
-	○ kernel/syscall.c								: システムコール管理
-	○ kernel/syscall.h								: システムコール管理インターフェース
-	○ kernel/task.h										: タスクメカニズム、タスク周り操作マクロ定義
-	○ kernel/task_manage.c						: タスク管理
-	○ kernel/task_manage.h						: タスク管理インターフェース
-	○ kernel/task_sync.c							: タスク付属同期
-	○ kernel/task_sync.h							: タスク付属同期インターフェース
+	○ kernel/command.c
+		: OSを操作する基本コマンド
+	○ kernel/command.h
+		: OSを操作する基本コマンドインターフェース
+	○ kernel/defines.h
+		: 型、エラーコードを定義
+	○ kernel/init_tsk.c	
+		: kernelのinit後、起動するタスク
+	○ kernel/intr_manage.c
+		: 割込み管理機能
+	○ kernel/intr_manage.h
+		: 割込み管理機能インターフェース
+	○ kernel/kernel.c	
+		: kernelのinit、カーネルコア、カーネルコアメカニズム
+	○ kernel/kernel.h	
+		: kernel.cのインターフェース
+	○ kernel/kernel.scr	
+		: リンカ設定(linkerscript)、メモリマップ
+	○ kernel/memory.c	
+		: heap管理(動的メモリ)
+	○ kernel/memory.h	
+		: heap管理(動的メモリ)インターフェース
+	○ kernel/multi_timer.c
+		: タイママルチ管理
+	○ kernel/muleti_timer.h	
+		: タイママルチ管理インターフェース
+	○ kernel/ready.c
+		: レディー状態管理
+	○ kernel/ready.h
+		: レディー状態管理インターフェース
+	○ kernel/scheduler.c
+		: スケジューリングポリシー
+	○ kernel/scheduler.h
+		: スケジューリングポリシーのインターフェース
+	○ kernel/syscall.c
+		: システムコール管理
+	○ kernel/syscall.h
+		: システムコール管理インターフェース
+	○ kernel/task.h	
+		: タスクメカニズム、タスク周り操作マクロ定義
+	○ kernel/task_manage.c
+		: タスク管理
+	○ kernel/task_manage.h
+		: タスク管理インターフェース
+	○ kernel/task_sync.c
+		: タスク付属同期
+	○ kernel/task_sync.h
+		: タスク付属同期インターフェース
 
-	○ kernel_svc/log_manage.c					: ロギング
-	○ kernel_svc/log_manage.h					: ログ管理インターフェース
+	○ kernel_svc/log_manage.c	
+		: ロギング
+	○ kernel_svc/log_manage.h	
+		: ログ管理インターフェース
 
-	○ net/jis_ctrl_crd.h							: 制御コード定義(JIS X 0211~C0集合)
-	○ net/xmodem.c										: xmodem転送プロトコル(送信)
-	○ net/xmodem.h										: xmodem転送プロトコル(送信)インターフェース
+	○ net/jis_ctrl_crd.h
+		: 制御コード定義(JIS X 0211~C0集合)
+	○ net/xmodem.c
+		: xmodem転送プロトコル(送信)
+	○ net/xmodem.h
+		: xmodem転送プロトコル(送信)インターフェース
 
-	○ target/driver/serial_driver.c 	: UARTドライバ
-	○ target/driver/serial_driver.h 	: UARTドライバのインターフェース
-	○ target/driver/timer_driver.c	 	: タイマドライバ
-	○ target/driver/timer_driver.h	 	: タイマドライバインターフェース
+	○ target/driver/serial_driver.c
+		: UARTドライバ
+	○ target/driver/serial_driver.h
+		: UARTドライバのインターフェース
+	○ target/driver/timer_driver.c
+		: タイマドライバ
+	○ target/driver/timer_driver.h
+		: タイマドライバインターフェース
 
-	○ tsk_lib/tsk_set1								: サンプルタスクセット
-	○ tsk_lib/tsk_set2								: サンプルタスクセット
-	○ tsk_lib/tsk_set3								: サンプルタスクセット
+	○ tsk_lib/tsk_set1
+		: サンプルタスクセット
+	○ tsk_lib/tsk_set2
+		: サンプルタスクセット
+	○ tsk_lib/tsk_set3
+		: サンプルタスクセット
 
 
 [使用ツール]
